@@ -3,60 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Telegram WebApp Bypass</title>
-<link rel="stylesheet" href="popup.css">
-<script src="popup.js" defer></script>
+<title>Telegram Mini-App Example</title>
+<style>
+  body { font-family: Arial; padding: 20px; }
+  h1 { color: #0088cc; }
+  button { padding: 10px 15px; margin-top: 10px; cursor: pointer; }
+  #output { margin-top: 20px; white-space: pre-wrap; background: #f0f0f0; padding: 10px; border-radius: 5px; }
+</style>
 </head>
 <body>
-<div class="container">
-    <h1>🚀 Telegram WebApp Bypass</h1>
-    <p>Get Query ID, User Data, Iframe Source & Token</p>
 
-    <button id="query_id">Get Query_ID</button>
-    <button id="user=">Get User=</button>
-    <button id="iframe_src">Get Iframe</button>
-    <button id="getAuth">Get Token</button>
+<h1>Telegram Mini-App Data Fetch</h1>
 
-    <div id="output"></div>
+<p>Click the button to get your Mini-App data:</p>
+<button id="getDataBtn">Get Data</button>
 
-    <img src="images/airdrop.png" alt="Airdrop">
+<div id="output"></div>
 
-    <div class="donate-section">
-      <h3>Support Us!</h3>
-      <p>If you find this tool useful, consider donating cryptocurrency.</p>
-      <button id="donateButton">Donate</button>
-    </div>
-</div>
-
-<div id="donation-page" style="display: none;">
-    <h1>Donate Cryptocurrency</h1>
-    <p>Send crypto to the wallets below. Thanks!</p>
-
-    <div class="wallet">
-        <h3>Bitcoin (BTC)</h3>
-        <div class="wallet-address">
-            <pre id="btcAddress">bc1p8waaxywyagkth5rh88506cdygmvw74nhvrxrpuarq4g2xd26zzsqwr8rjq</pre>
-            <button class="copy-button" data-address="btcAddress">Copy</button>
-        </div>
-    </div>
-
-    <div class="wallet">
-        <h3>Bnb (BSC)</h3>
-        <div class="wallet-address">
-            <pre id="ethAddress">0xDC97893129a7514AE801e2c3d905BcFD93474070</pre>
-            <button class="copy-button" data-address="ethAddress">Copy</button>
-        </div>
-    </div>
-
-    <div class="wallet">
-        <h3>TON</h3>
-        <div class="wallet-address">
-            <pre id="tonAddress">UQA-EK---gU00TG6xurJsnArNW8O48RVkkEZaGontlxT-rKu</pre>
-            <button class="copy-button" data-address="tonAddress">Copy</button>
-        </div>
-    </div>
-
-    <button id="backButton">Back</button>
-</div>
+<script src="index.js"></script>
 </body>
 </html>
