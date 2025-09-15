@@ -1,0 +1,5 @@
+body { font-family: Arial,sans-serif; background:#f7f7f7; padding:10px; }
+.container { text-align:center; max-width:400px; margin:auto; }
+button { margin:5px; padding:10px 15px; cursor:pointer; background:#0040ff; color:white; border:none; border-radius:5px; }
+pre { background:#222; color:#0f0; padding:5px; border-radius:5px; white-space: pre-wrap; text-align:left; }
+img { width:80%; margin-top:10px; border-radius:10px; }
