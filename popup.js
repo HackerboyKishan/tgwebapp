@@ -1,18 +1,24 @@
-// Buttons
-document.getElementById('query_id').addEventListener('click', () => {
-    extractQueryId();
+document.getElementById('query_id').addEventListener('click', extractQueryId);
+document.getElementById('user=').addEventListener('click', extractUser);
+document.getElementById('iframe_src').addEventListener('click', extractIframe);
+document.getElementById('getAuth').addEventListener('click', extractToken);
+
+// Donate buttons
+document.getElementById('donateButton').addEventListener('click', () => {
+    document.querySelector('.container').style.display = 'none';
+    document.getElementById('donation-page').style.display = 'block';
+});
+document.getElementById('backButton').addEventListener('click', () => {
+    document.querySelector('.container').style.display = 'block';
+    document.getElementById('donation-page').style.display = 'none';
 });
 
-document.getElementById('user=').addEventListener('click', () => {
-    extractUser();
-});
-
-document.getElementById('iframe_src').addEventListener('click', () => {
-    extractIframe();
-});
-
-document.getElementById('getAuth').addEventListener('click', () => {
-    extractToken();
+// Copy wallet
+document.querySelectorAll('.copy-button').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const addr = document.getElementById(btn.dataset.address).textContent;
+        navigator.clipboard.writeText(addr).then(() => alert('Copied to clipboard'));
+    });
 });
 
 function showOutput(text) {
