@@ -1,0 +1,64 @@
+body{font-family:Arial,sans-serif;background-color:#f7f7f7;margin:0;padding:0;width:338px;height:338px}.container{text-align:center}h1{font-size:26px;color:#0040ff;margin-bottom:10px}p{font-size:14px;color:#333;margin-bottom:12px;font-weight:600}img{width:90%;height:90%;border-radius:10px}footer{text-align:center;padding:10px;background-color:#e0e0e0;position:absolute;bottom:0;width:100%;box-sizing:border-box;display:contents}footer p{font-size:14px;margin:0;color:#333}footer a{color:#006bab;text-decoration:none}footer a:hover{text-decoration:underline}.container{flex-direction:column;align-items:center;gap:10px}button{margin:8px 12px 8px 12px;}footer{text-align:center;margin-top:50px}@media (min-width:768px){button{font-size:24px;min-width:196px}}button{--border-color:linear-gradient(-45deg,#0539d5e3,#2e4779de,#00a19ff2);--border-width:.125em;--curve-size:.4em;--bg:#0031c300;--color:#fff;color:#fff;cursor:pointer;position:relative;isolation:isolate;display:inline-grid;place-content:center;padding:.6em .8em;font-size:16px;border:0;text-transform:uppercase;box-shadow:10px 10px 20px rgba(0,0,0,.6);clip-path:polygon(0% var(--curve-size),var(--curve-size) 0,100% 0,100% calc(100% - var(--curve-size)),calc(100% - var(--curve-size)) 100%,0 100%);transition:color 250ms}button::after,button::before{content:"";position:absolute;inset:0}button::before{background:var(--border-color);background-size:300% 300%;animation:move-bg7234 5s ease infinite;z-index:-2}@keyframes move-bg7234{0%{background-position:31% 0%}50%{background-position:70% 100%}100%{background-position:31% 0%}}button::after{background:var(--bg);z-index:-1;clip-path:polygon(var(--border-width) calc(var(--curve-size) var(--border-width) * 0.5),calc(var(--curve-size) var(--border-width) * 0.5) var(--border-width),calc(100% - var(--border-width)) var(--border-width),calc(100% - var(--border-width)) calc(100% -)calc(var(--curve-size) var(--border-width) * 0.5)),calc(100% -)calc(var(--curve-size) var(--border-width) * 0.5)) calc(100% - var(--border-width)),var(--border-width) calc(100% - var(--border-width)));transition:clip-path 500ms}button:where(:hover,:focus)::after{clip-path:polygon(calc(100% - var(--border-width)) calc(100% -)calc(var(--curve-size) var(--border-width) * 0.5)),calc(100% - var(--border-width)) var(--border-width),calc(100% - var(--border-width)) var(--border-width),calc(100% - var(--border-width)) calc(100% -)calc(var(--curve-size) var(--border-width) * 0.5)),calc(100% -)calc(var(--curve-size) var(--border-width) * 0.5)) calc(100% - var(--border-width)),calc(100% -)calc(var(--curve-size) var(--border-width) * 0.5)) calc(100% - var(--border-width)));transition:200ms}button:where(:hover,:focus){color:#fff;box-shadow:0 .5em .5em -.4em var(--hover);transform:translateY(-.25em);transition:0.38s}span{word-wrap:break-word}#rainbowText{font-size:26px;color:#006bab;margin-bottom:10px;font-weight:700;padding-top:18px}p.copyright {font-size:13px;font-style:normal;font-weight:600;}div#requestToken {padding:0px 6px 0px;}
+/* General Styling for Donation Page */
+#donation-page {
+    padding: 20px;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+}
+
+#donation-page h1 {
+    font-size: 24px;
+    color: #4caf50;
+    margin-bottom: 10px;
+}
+
+#donation-page p {
+    font-size: 16px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.wallet {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.wallet h3 {
+    font-size: 18px;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.wallet-address {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.wallet pre {
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #333;
+    margin: 0;
+    overflow-x: auto;
+}
+
+.copy-button {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.copy-button:hover {
+    background-color: #45a049;
+}
