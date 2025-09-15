@@ -3,167 +3,372 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram Mini-App Data Extractor</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <title>Telegram Web App Data Extractor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
             padding: 20px;
-            background-color: #f5f5f5;
+            color: #333;
         }
+        
         .container {
-            max-width: 600px;
+            max-width: 800px;
             margin: 0 auto;
             background: white;
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
+        
+        h1 {
+            font-size: 26px;
+            color: #0040ff;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        p {
+            font-size: 14px;
+            margin-bottom: 12px;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
         button {
-            background-color: #0088cc;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            margin: 5px;
-            border-radius: 5px;
+            --border-color: linear-gradient(-45deg, #0539d5e3, #2e4779de, #00a19ff2);
+            --border-width: .125em;
+            --curve-size: .4em;
+            --bg: #0031c300;
+            --color: #fff;
+            color: #fff;
             cursor: pointer;
-            width: 100%;
+            position: relative;
+            isolation: isolate;
+            display: inline-grid;
+            place-content: center;
+            padding: .6em .8em;
+            font-size: 16px;
+            border: 0;
+            text-transform: uppercase;
+            box-shadow: 10px 10px 20px rgba(0,0,0,.6);
+            clip-path: polygon(0% var(--curve-size), var(--curve-size) 0, 100% 0, 100% calc(100% - var(--curve-size)), calc(100% - var(--curve-size)) 100%, 0 100%);
+            transition: color 250ms;
+            margin: 8px 0;
         }
+        
+        button::after, button::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+        }
+        
+        button::before {
+            background: var(--border-color);
+            background-size: 300% 300%;
+            animation: move-bg7234 5s ease infinite;
+            z-index: -2;
+        }
+        
+        @keyframes move-bg7234 {
+            0% { background-position: 31% 0%; }
+            50% { background-position: 70% 100%; }
+            100% { background-position: 31% 0%; }
+        }
+        
+        button::after {
+            background: var(--bg);
+            z-index: -1;
+            clip-path: polygon(var(--border-width) calc(var(--curve-size) + var(--border-width) * 0.5), calc(var(--curve-size) + var(--border-width) * 0.5) var(--border-width), calc(100% - var(--border-width)) var(--border-width), calc(100% - var(--border-width)) calc(100% - calc(var(--curve-size) + var(--border-width) * 0.5)), calc(100% - calc(var(--curve-size) + var(--border-width) * 0.5)) calc(100% - var(--border-width)), var(--border-width) calc(100% - var(--border-width)));
+            transition: clip-path 500ms;
+        }
+        
+        button:hover::after {
+            clip-path: polygon(calc(100% - var(--border-width)) calc(100% - calc(var(--curve-size) + var(--border-width) * 0.5)), calc(100% - var(--border-width)) var(--border-width), calc(100% - var(--border-width)) var(--border-width), calc(100% - var(--border-width)) calc(100% - calc(var(--curve-size) + var(--border-width) * 0.5)), calc(100% - calc(var(--curve-size) + var(--border-width) * 0.5)) calc(100% - var(--border-width)), calc(100% - calc(var(--curve-size) + var(--border-width) * 0.5)) calc(100% - var(--border-width)));
+            transition: 200ms;
+        }
+        
         button:hover {
-            background-color: #006699;
+            color: #fff;
+            box-shadow: 0 .5em .5em -.4em var(--hover);
+            transform: translateY(-.25em);
+            transition: 0.38s;
         }
-        .result {
-            margin-top: 15px;
-            padding: 10px;
+        
+        .result-container {
+            margin: 20px 0;
+            padding: 15px;
             border: 1px solid #ddd;
             border-radius: 5px;
             background-color: #f9f9f9;
+        }
+        
+        .result-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #006bab;
+        }
+        
+        .result-content {
             word-break: break-all;
+            white-space: pre-wrap;
+            padding: 10px;
+            background: #fff;
+            border-radius: 5px;
+            max-height: 200px;
+            overflow-y: auto;
         }
+        
         .success {
-            color: green;
+            color: #00ab00;
         }
+        
         .error {
             color: red;
+        }
+        
+        .input-group {
+            margin: 15px 0;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .header h1 {
+            font-size: 26px;
+            color: #006bab;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .instructions {
+            background-color: #e8f4fc;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        
+        .instructions h3 {
+            margin-top: 0;
+            color: #0040ff;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 10px;
+            font-size: 14px;
+        }
+        
+        footer a {
+            color: #006bab;
+            text-decoration: none;
+        }
+        
+        footer a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>Telegram Mini-App Data Extractor</h2>
+        <div class="header">
+            <h1><i class="fas fa-screwdriver-wrench"></i> Telegram Web App Data Extractor</h1>
+            <p>Extract Query ID, User Data, and Authentication Tokens from Telegram Mini-Apps</p>
+        </div>
         
-        <button id="getInitData">Get Init Data</button>
-        <div id="initDataResult" class="result"></div>
+        <div class="instructions">
+            <h3>How to use this tool:</h3>
+            <ol>
+                <li>Open a Telegram Mini-App in your browser</li>
+                <li>Copy the iframe URL from the Mini-App</li>
+                <li>Paste it in the input field below</li>
+                <li>Click on the buttons to extract different types of data</li>
+            </ol>
+        </div>
         
-        <button id="copyInitData">Copy Init Data</button>
+        <div class="input-group">
+            <label for="iframeUrl">Paste Telegram Mini-App Iframe URL:</label>
+            <input type="text" id="iframeUrl" placeholder="https://example-telegram-mini-app.com/...">
+        </div>
         
-        <button id="getQueryId">Get Query ID</button>
-        <div id="queryIdResult" class="result"></div>
+        <div class="button-container">
+            <button id="query_id">Get Query_ID</button>
+            <button id="getUser">Get User Data</button>
+            <button id="getIframe">Get Iframe Sources</button>
+            <button id="getAuth">Get Auth Token</button>
+        </div>
         
-        <button id="getUserData">Get User Data</button>
-        <div id="userDataResult" class="result"></div>
+        <div class="result-container">
+            <div class="result-title">Results:</div>
+            <div class="result-content" id="resultOutput">The extracted data will appear here...</div>
+        </div>
         
-        <button id="copyAllData">Copy All Data</button>
+        <div>
+            <p style="font-weight: bold;">Tokens are only valid when you open Mini Apps and the data must be in the format eyJh......</p>
+        </div>
+        
+        <footer>
+            <p>The results will be automatically copied to your clipboard</p>
+            <p class="copyright"><a href="https://t.me/DeepTV12" target="_blank">© DeepTV - All Rights Reserved.</a></p>
+        </footer>
     </div>
 
     <script>
-        // Initialize Telegram Web App
-        let tg = window.Telegram.WebApp;
-        tg.expand();
-        tg.enableClosingConfirmation();
-        
-        // Get Telegram init data
-        document.getElementById('getInitData').addEventListener('click', function() {
-            const initData = tg.initData || 'No init data available';
-            document.getElementById('initDataResult').textContent = initData;
-            document.getElementById('initDataResult').className = 'result success';
-        });
-        
-        // Copy init data to clipboard
-        document.getElementById('copyInitData').addEventListener('click', function() {
-            const initData = tg.initData;
-            if (initData) {
-                navigator.clipboard.writeText(initData).then(() => {
-                    alert('Init data copied to clipboard!');
+        document.addEventListener('DOMContentLoaded', function() {
+            const iframeUrlInput = document.getElementById('iframeUrl');
+            const resultOutput = document.getElementById('resultOutput');
+            
+            // Function to copy text to clipboard
+            function copyToClipboard(text) {
+                navigator.clipboard.writeText(text).then(() => {
+                    console.log('Text copied to clipboard');
+                }).catch(err => {
+                    console.error('Could not copy text: ', err);
+                    // Fallback method
+                    const textArea = document.createElement('textarea');
+                    textArea.value = text;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
                 });
-            } else {
-                alert('No init data available to copy');
             }
-        });
-        
-        // Extract Query ID from init data
-        document.getElementById('getQueryId').addEventListener('click', function() {
-            const initData = tg.initData;
-            if (initData) {
-                const params = new URLSearchParams(initData);
-                const queryId = params.get('query_id');
-                if (queryId) {
-                    document.getElementById('queryIdResult').textContent = `Query ID: ${queryId}`;
-                    document.getElementById('queryIdResult').className = 'result success';
+            
+            // Function to extract query ID
+            function extractQueryId() {
+                const iframeUrl = iframeUrlInput.value;
+                if (!iframeUrl) {
+                    resultOutput.innerHTML = '<span class="error">Please enter an iframe URL first</span>';
+                    return;
+                }
+                
+                try {
+                    const inputString = decodeURIComponent(iframeUrl);
+                    const fragment = inputString.split('#')[1] || '';
+                    let dataPart = fragment.split('tgWebAppData=')[1] || '';
                     
-                    // Auto-copy to clipboard
-                    navigator.clipboard.writeText(queryId).then(() => {
-                        tg.showPopup({title: 'Success', message: 'Query ID copied to clipboard!'});
-                    });
-                } else {
-                    document.getElementById('queryIdResult').textContent = 'Query ID not found in init data';
-                    document.getElementById('queryIdResult').className = 'result error';
-                }
-            } else {
-                document.getElementById('queryIdResult').textContent = 'No init data available';
-                document.getElementById('queryIdResult').className = 'result error';
-            }
-        });
-        
-        // Extract User data from init data
-        document.getElementById('getUserData').addEventListener('click', function() {
-            const initData = tg.initData;
-            if (initData) {
-                const params = new URLSearchParams(initData);
-                const userStr = params.get('user');
-                if (userStr) {
-                    try {
-                        const userData = JSON.parse(decodeURIComponent(userStr));
-                        document.getElementById('userDataResult').textContent = `User Data: ${JSON.stringify(userData, null, 2)}`;
-                        document.getElementById('userDataResult').className = 'result success';
-                        
-                        // Auto-copy to clipboard
-                        navigator.clipboard.writeText(userStr).then(() => {
-                            tg.showPopup({title: 'Success', message: 'User data copied to clipboard!'});
-                        });
-                    } catch (e) {
-                        document.getElementById('userDataResult').textContent = `Error parsing user data: ${e.message}`;
-                        document.getElementById('userDataResult').className = 'result error';
+                    if (!dataPart) {
+                        const telegramParams = inputString.split('__telegram__initParams=')[1] || '';
+                        if (telegramParams) {
+                            const telegramData = JSON.parse(decodeURIComponent(telegramParams));
+                            dataPart = telegramData['tgWebAppData'] || '';
+                        }
                     }
-                } else {
-                    document.getElementById('userDataResult').textContent = 'User data not found in init data';
-                    document.getElementById('userDataResult').className = 'result error';
+                    
+                    if (!dataPart) {
+                        throw new Error("Query_ID data not found😭");
+                    }
+                    
+                    const parts = dataPart.split('&');
+                    const params = {};
+                    
+                    parts.forEach(part => {
+                        const [key, value] = part.split('=');
+                        if (key && value) {
+                            params[key] = value;
+                        }
+                    });
+                    
+                    if (Object.keys(params).length === 0) {
+                        throw new Error("Query_ID data not found😭");
+                    }
+                    
+                    const outputString = Object.keys(params)
+                        .filter(key => !key.includes('tgWebApp'))
+                        .map(key => `${key}=${params[key]}`)
+                        .join('&');
+                    
+                    if (!outputString) {
+                        throw new Error("Query_ID data not found😭");
+                    }
+                    
+                    copyToClipboard(outputString);
+                    resultOutput.innerHTML = `<span class="success">😍Query_ID data extracted successfully and copied to clipboard!</span><br><br>${outputString}`;
+                    
+                } catch (error) {
+                    resultOutput.innerHTML = `<span class="error">${error.message}</span>`;
                 }
-            } else {
-                document.getElementById('userDataResult').textContent = 'No init data available';
-                document.getElementById('userDataResult').className = 'result error';
             }
-        });
-        
-        // Copy all data to clipboard
-        document.getElementById('copyAllData').addEventListener('click', function() {
-            const initData = tg.initData;
-            if (initData) {
-                navigator.clipboard.writeText(initData).then(() => {
-                    tg.showPopup({title: 'Success', message: 'All data copied to clipboard!'});
-                });
-            } else {
-                tg.showPopup({title: 'Error', message: 'No data available to copy'});
+            
+            // Function to extract user data
+            function extractUserData() {
+                const iframeUrl = iframeUrlInput.value;
+                if (!iframeUrl) {
+                    resultOutput.innerHTML = '<span class="error">Please enter an iframe URL first</span>';
+                    return;
+                }
+                
+                try {
+                    const inputString = decodeURIComponent(iframeUrl);
+                    const fragment = inputString.split('#')[1] || '';
+                    const dataPart = fragment.split('tgWebAppData=')[1] || '';
+                    
+                    if (dataPart.length > 0) {
+                        const userPart = dataPart.split('user=')[1];
+                        if (userPart) {
+                            const params = userPart.split('&');
+                            const excludeKeys = ['tgWebAppVersion', 'tgWebAppPlatform', 'tgWebAppThemeParams'];
+                            const filteredParams = params.filter(param => {
+                                const [key] = param.split('=');
+                                return !excludeKeys.includes(key);
+                            });
+                            
+                            const result = 'user=' + filteredParams.join('&');
+                            copyToClipboard(result);
+                            resultOutput.innerHTML = `<span class="success">😍User data extracted successfully and copied to clipboard!</span><br><br>${result}`;
+                            return;
+                        }
+                    }
+                    
+                    throw new Error("No data found user=%7B%22...😭");
+                    
+                } catch (error) {
+                    resultOutput.innerHTML = `<span class="error">${error.message}</span>`;
+                }
             }
+            
+            // Function to extract iframe sources (simplified for web app)
+            function extractIframeSources() {
+                resultOutput.innerHTML = '<span class="error">This functionality requires a browser extension to access iframes directly.</span>';
+            }
+            
+            // Function to extract auth token (simplified for web app)
+            function extractAuthToken() {
+                resultOutput.innerHTML = '<span class="error">Auth token extraction requires a browser extension to intercept HTTP requests.</span>';
+            }
+            
+            // Event listeners for buttons
+            document.getElementById('query_id').addEventListener('click', extractQueryId);
+            document.getElementById('getUser').addEventListener('click', extractUserData);
+            document.getElementById('getIframe').addEventListener('click', extractIframeSources);
+            document.getElementById('getAuth').addEventListener('click', extractAuthToken);
         });
-        
-        // Send data to bot if launched from inline keyboard
-        if (tg.initDataUnsafe.start_param) {
-            tg.sendData(JSON.stringify({
-                type: 'web_app_init',
-                data: tg.initData
-            }));
-        }
     </script>
 </body>
 </html>
