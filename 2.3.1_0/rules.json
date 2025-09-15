@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "responseHeaders": [
+        { "header": "Access-Control-Allow-Origin", "operation": "remove" },
+        { "header": "Content-Security-Policy", "operation": "remove" },
+        { "header": "X-Frame-Options", "operation": "remove" }
+      ]
+    },
+    "condition": {
+      "regexFilter": "^https?://(.*\\.)?(nodepay|getgrass|grassfoundation|gradient|cloudflare)\\.(io|com|network|ai)|memefi\\.club",
+      "resourceTypes": ["main_frame", "sub_frame"]
+    }
+  },
+  {
+    "id": 2,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "responseHeaders": [
+        { "header": "Authorization", "operation": "remove" },
+        { "header": "Token", "operation": "remove" },
+        { "header": "Cookie", "operation": "remove" }
+      ]
+    },
+    "condition": {
+      "urlFilter": "*://*/*",
+      "resourceTypes": ["main_frame", "sub_frame"]
+    }
+  },
+  {
+    "id": 3,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "responseHeaders": [
+        { "header": "Access-Control-Allow-Origin", "operation": "remove" },
+        { "header": "Content-Security-Policy", "operation": "remove" },
+        { "header": "X-Frame-Options", "operation": "remove" }
+      ]
+    },
+    "condition": {
+      "urlFilter": "*://*/*",
+      "resourceTypes": ["main_frame", "sub_frame"]
+    }
+  }
+]
