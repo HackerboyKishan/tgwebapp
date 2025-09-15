@@ -1,23 +1,169 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <title>Telegram WebApp</title>
-  <link rel="stylesheet" href="style.css" />
-  <!-- Telegram WebApp SDK -->
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Mini-App Data Extractor</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        button {
+            background-color: #0088cc;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #006699;
+        }
+        .result {
+            margin-top: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            word-break: break-all;
+        }
+        .success {
+            color: green;
+        }
+        .error {
+            color: red;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>My Extension in Telegram WebApp</h1>
+    <div class="container">
+        <h2>Telegram Mini-App Data Extractor</h2>
+        
+        <button id="getInitData">Get Init Data</button>
+        <div id="initDataResult" class="result"></div>
+        
+        <button id="copyInitData">Copy Init Data</button>
+        
+        <button id="getQueryId">Get Query ID</button>
+        <div id="queryIdResult" class="result"></div>
+        
+        <button id="getUserData">Get User Data</button>
+        <div id="userDataResult" class="result"></div>
+        
+        <button id="copyAllData">Copy All Data</button>
+    </div>
 
-    <input id="msg" placeholder="Type something..." />
-    <button id="sendBtn">Send to Bot</button>
-
-    <div id="output"></div>
-  </div>
-
-  <script src="app.js"></script>
+    <script>
+        // Initialize Telegram Web App
+        let tg = window.Telegram.WebApp;
+        tg.expand();
+        tg.enableClosingConfirmation();
+        
+        // Get Telegram init data
+        document.getElementById('getInitData').addEventListener('click', function() {
+            const initData = tg.initData || 'No init data available';
+            document.getElementById('initDataResult').textContent = initData;
+            document.getElementById('initDataResult').className = 'result success';
+        });
+        
+        // Copy init data to clipboard
+        document.getElementById('copyInitData').addEventListener('click', function() {
+            const initData = tg.initData;
+            if (initData) {
+                navigator.clipboard.writeText(initData).then(() => {
+                    alert('Init data copied to clipboard!');
+                });
+            } else {
+                alert('No init data available to copy');
+            }
+        });
+        
+        // Extract Query ID from init data
+        document.getElementById('getQueryId').addEventListener('click', function() {
+            const initData = tg.initData;
+            if (initData) {
+                const params = new URLSearchParams(initData);
+                const queryId = params.get('query_id');
+                if (queryId) {
+                    document.getElementById('queryIdResult').textContent = `Query ID: ${queryId}`;
+                    document.getElementById('queryIdResult').className = 'result success';
+                    
+                    // Auto-copy to clipboard
+                    navigator.clipboard.writeText(queryId).then(() => {
+                        tg.showPopup({title: 'Success', message: 'Query ID copied to clipboard!'});
+                    });
+                } else {
+                    document.getElementById('queryIdResult').textContent = 'Query ID not found in init data';
+                    document.getElementById('queryIdResult').className = 'result error';
+                }
+            } else {
+                document.getElementById('queryIdResult').textContent = 'No init data available';
+                document.getElementById('queryIdResult').className = 'result error';
+            }
+        });
+        
+        // Extract User data from init data
+        document.getElementById('getUserData').addEventListener('click', function() {
+            const initData = tg.initData;
+            if (initData) {
+                const params = new URLSearchParams(initData);
+                const userStr = params.get('user');
+                if (userStr) {
+                    try {
+                        const userData = JSON.parse(decodeURIComponent(userStr));
+                        document.getElementById('userDataResult').textContent = `User Data: ${JSON.stringify(userData, null, 2)}`;
+                        document.getElementById('userDataResult').className = 'result success';
+                        
+                        // Auto-copy to clipboard
+                        navigator.clipboard.writeText(userStr).then(() => {
+                            tg.showPopup({title: 'Success', message: 'User data copied to clipboard!'});
+                        });
+                    } catch (e) {
+                        document.getElementById('userDataResult').textContent = `Error parsing user data: ${e.message}`;
+                        document.getElementById('userDataResult').className = 'result error';
+                    }
+                } else {
+                    document.getElementById('userDataResult').textContent = 'User data not found in init data';
+                    document.getElementById('userDataResult').className = 'result error';
+                }
+            } else {
+                document.getElementById('userDataResult').textContent = 'No init data available';
+                document.getElementById('userDataResult').className = 'result error';
+            }
+        });
+        
+        // Copy all data to clipboard
+        document.getElementById('copyAllData').addEventListener('click', function() {
+            const initData = tg.initData;
+            if (initData) {
+                navigator.clipboard.writeText(initData).then(() => {
+                    tg.showPopup({title: 'Success', message: 'All data copied to clipboard!'});
+                });
+            } else {
+                tg.showPopup({title: 'Error', message: 'No data available to copy'});
+            }
+        });
+        
+        // Send data to bot if launched from inline keyboard
+        if (tg.initDataUnsafe.start_param) {
+            tg.sendData(JSON.stringify({
+                type: 'web_app_init',
+                data: tg.initData
+            }));
+        }
+    </script>
 </body>
 </html>
