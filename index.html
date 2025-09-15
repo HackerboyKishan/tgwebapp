@@ -1,53 +1,75 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Copy callback ID</title>
+  <meta charset="UTF-8">
+  <title>Telegram WebApp Extractor</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
-    body { font-family: Arial, sans-serif; margin:20px; display:flex;flex-direction:column;gap:12px;align-items:center; }
-    pre { background:#f4f4f4;padding:10px;border-radius:6px;max-width:100%;overflow:auto; }
-    button { padding:10px 16px; font-size:16px; border-radius:8px; cursor:pointer; }
+    body { font-family: Arial; background: #111; color: #0f0; padding: 20px; }
+    button { margin: 10px; padding: 10px; background:#222; color:#0f0; border:1px solid #0f0; border-radius:5px; }
+    pre { background:#000; padding:10px; border-radius:5px; }
   </style>
 </head>
 <body>
-  <h2>Your callback id</h2>
-  <pre id="idbox">Loading...</pre>
-  <button id="copyBtn">Copy to clipboard</button>
+  <h2>🚀 Telegram WebApp Data Extractor</h2>
+
+  <button onclick="getQueryId()">🔑 Get Query ID</button>
+  <button onclick="getUser()">👤 Get User Data</button>
+  <button onclick="getToken()">🛡 Get Token</button>
+  <button onclick="copyAll()">📋 Copy All</button>
+
+  <h3>📌 Extracted Data:</h3>
+  <pre id="output"></pre>
 
   <script>
-    // read id from query param
-    function getQueryParam(name) {
-      const url = new URL(window.location.href);
-      return url.searchParams.get(name);
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+
+    let extracted = {};
+
+    // ✅ Query ID Extract
+    function getQueryId() {
+      try {
+        extracted.query_id = tg.initDataUnsafe.query_id || "❌ Not Found";
+        showOutput("Query ID: " + extracted.query_id);
+      } catch (e) {
+        showOutput("Error getting Query ID: " + e.message);
+      }
     }
 
-    const idbox = document.getElementById('idbox');
-    const copyBtn = document.getElementById('copyBtn');
-
-    // 1) Try to use query param `id`
-    let cbId = getQueryParam('id');
-
-    // 2) If not present, try Telegram WebApp initDataUnsafe (if opened inside Telegram)
-    if ((!cbId || cbId === 'null') && window.Telegram && Telegram.WebApp && Telegram.WebApp.initDataUnsafe) {
-      // initDataUnsafe may contain user/chat; callback id may not be present; this is fallback only
-      const unsafe = Telegram.WebApp.initDataUnsafe;
-      cbId = unsafe?.query_id || unsafe?.inline_query_id || unsafe?.callback_query_id || null;
+    // ✅ User Data Extract
+    function getUser() {
+      try {
+        extracted.user = tg.initDataUnsafe.user || {};
+        showOutput("User Data: " + JSON.stringify(extracted.user, null, 2));
+      } catch (e) {
+        showOutput("Error getting User Data: " + e.message);
+      }
     }
 
-    if (!cbId) {
-      idbox.textContent = 'No callback id found. Open the Web App from the bot after pressing the button.';
-      copyBtn.disabled = true;
-    } else {
-      idbox.textContent = cbId;
-      copyBtn.addEventListener('click', async () => {
-        try {
-          await navigator.clipboard.writeText(cbId);
-          alert('Copied to clipboard!');
-        } catch (e) {
-          alert('Copy failed. Please copy manually: ' + cbId);
-        }
+    // ✅ Token Extract
+    function getToken() {
+      try {
+        extracted.token = tg.initData || "❌ Not Found";
+        showOutput("Token: " + extracted.token);
+      } catch (e) {
+        showOutput("Error getting Token: " + e.message);
+      }
+    }
+
+    // ✅ Copy All
+    function copyAll() {
+      const text = JSON.stringify(extracted, null, 2);
+      navigator.clipboard.writeText(text).then(() => {
+        alert("✅ Data copied to clipboard!");
+      }).catch(err => {
+        console.error("Copy failed", err);
       });
+    }
+
+    // Show output in <pre>
+    function showOutput(text) {
+      document.getElementById("output").textContent += text + "\n\n";
     }
   </script>
 </body>
